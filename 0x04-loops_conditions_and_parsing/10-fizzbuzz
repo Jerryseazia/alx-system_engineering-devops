@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# FizzBuzz - print 1 to 100, "Fizz" for multiples of 3,
+# "Buzz" for multiples of 5, and "FizzBuzz" for multiples of 3 and 5
+
+for (( x=1; x < 101; x++ ))
+do
+    if (( x % 15 == 0 )); then
+	echo "FizzBuzz"
+    elif (( x % 3 == 0 )); then
+	echo "Fizz"
+    elif (( x % 5 == 0 )); then
+	echo "Buzz"
+    else
+	echo "$x"
+    fi
+done
