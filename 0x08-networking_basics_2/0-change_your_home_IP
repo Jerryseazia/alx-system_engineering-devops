@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Updates hostfile to change localhost to 127.0.0.2 and facebook.com to 8.8.8.8
+# (To be run in Docker container; else revert hostfile back)
+
+cp /etc/hosts hosts_tmp
+sed -i s/127.*$/127.0.0.2\\tlocalhost\\n8.8.8.8\\tfacebook.com/g hosts_tmp
+cp -f hosts_tmp /etc/hosts
