@@ -32,8 +32,29 @@ defaults
         errorfile 502 /etc/haproxy/errors/502.http
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
-listen balancer
-        bind :80
-        balance roundrobin
-        server 262805-web-01 54.160.65.42:80 check
-        server 262805-web-02 35.153.66.228:80 check
+
+        # start of parameters for seazia.tech
+frontend www.http
+        bind     *:80
+        http-request add-header X-Forwarded-Proto http
+        default_backend  www-backend
+
+
+frontend  www-https
+        bind *:443 ssl crt /etc/letsencrypt/live/www.seazia.tech/www.seazia.tech.pem
+        http-request add-header X-Forwarded-Proto https
+    acl    letsencrypt-acl path_beg /.well-known/acme-challenge/
+    use_backend letsencrypt-backend if letsencrypt-acl
+    default_backend www-backend
+
+
+backend www-backend
+    balance  roundrobin
+    redirect scheme https if !{ ssl_fc }
+        server 238110-web-01 54.144.151.174:80 check
+        server 238110-web-02  18.210.18.48:80 check
+
+backend letsencrypt-backend
+    server letsencrypt 127.0.0.1:54321
+# end of parameters
+~                     
